@@ -13,6 +13,9 @@ type RecentTrip = {
   lastOpenedAt: number;
 };
 
+export type RoomView = "Agent chat" | "Group chat" | "Media" | "People" | "Plan";
+const roomViews: RoomView[] = ["Agent chat", "Group chat", "Media", "People", "Plan"];
+
 const storageKey = "trip-parliament:recent-trips:v1";
 const tokenPattern = /^[A-Za-z0-9_-]{32}$/;
 const phases = new Set<HallState["phase"]>(["Preparing", "Proposing", "Negotiating", "Voting", "Agreed", "Blocked"]);
@@ -38,7 +41,7 @@ function saveRecentTrips(trips: RecentTrip[]) {
   try { localStorage.setItem(storageKey, JSON.stringify(trips.slice(0, 20))); } catch { /* Private browsing can disable storage. */ }
 }
 
-export default function TripSidebar({ token, hall }: { token: string; hall: HallState }) {
+export default function TripSidebar({ token, hall, view, onViewChange }: { token: string; hall: HallState; view: RoomView; onViewChange: (view: RoomView) => void }) {
   const router = useRouter();
   const [trips, setTrips] = useState<RecentTrip[]>([]);
   const [creating, setCreating] = useState(false);
@@ -71,24 +74,24 @@ export default function TripSidebar({ token, hall }: { token: string; hall: Hall
     try {
       const response = await fetch("/api/halls", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title, scenario: newScenario }) });
       const data = await response.json();
-      if (!response.ok || !tokenPattern.test(data.token || "")) throw new Error(data.error || "Could not create a trip.");
+      if (!response.ok || !tokenPattern.test(data.token || "")) throw new Error(data.error || "Could not create a room.");
       const next: RecentTrip[] = [{ token: data.token, title, phase: "Preparing" as const, preview: "Set the terms and begin planning", lastOpenedAt: Date.now() }, ...readRecentTrips()].slice(0, 20);
       saveRecentTrips(next);
       setTrips(next); setCreating(false); setNewTitle("");
       router.push(`/h/${data.token}`);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not create a trip.");
+      setError(caught instanceof Error ? caught.message : "Could not create a room.");
     } finally { setBusy(false); }
   }
 
-  return <aside className="trip-sidebar" aria-label="Trip chats">
-    <div className="trip-sidebar-top"><div><p className="sidebar-caption">Your workspace</p><h2>Rooms</h2></div><button className="mobile-trip-toggle" aria-expanded={mobileOpen} aria-controls="recent-trip-list" onClick={() => setMobileOpen(value => !value)}>{mobileOpen ? "Hide rooms −" : "Show rooms +"}</button><button className="new-trip-button" onClick={() => { setCreating(value => !value); setMobileOpen(true); }} aria-expanded={creating} aria-controls={creating ? "new-trip-form" : undefined}>{creating ? "Close" : "+ New"}</button></div>
+  return <aside className="trip-sidebar" aria-label="Room navigation">
+    <nav className="room-view-list" aria-label="This room">{roomViews.map((item, index) => <button key={item} className={`room-view-item ${view === item ? "active" : ""}`} onClick={() => onViewChange(item)} aria-current={view === item ? "page" : undefined}><span>{String(index + 1).padStart(2, "0")}</span>{item}{item === "Agent chat" && ["Proposing", "Negotiating", "Voting"].includes(hall.phase) && <i className="tab-live-dot" aria-hidden="true" />}</button>)}</nav>
+    <div className="trip-sidebar-top"><h2>Rooms</h2><button className="mobile-trip-toggle" aria-expanded={mobileOpen} aria-controls="recent-trip-list" onClick={() => setMobileOpen(value => !value)}>{mobileOpen ? "Hide −" : "Show +"}</button><button className="new-trip-button" onClick={() => { setCreating(value => !value); setMobileOpen(true); }} aria-expanded={creating} aria-controls={creating ? "new-trip-form" : undefined}>{creating ? "Close" : "+ New"}</button></div>
     {creating && <form id="new-trip-form" className="new-trip-form" onSubmit={createTrip}>
-      <label htmlFor="new-trip-scenario">Sample room</label>
+      <label htmlFor="new-trip-scenario">Example</label>
       <select id="new-trip-scenario" value={newScenario} onChange={event => setNewScenario(event.target.value as "yosemite" | "san-diego")}><option value="yosemite">Yosemite weekend · four friends</option><option value="san-diego">San Diego day trip · four friends</option></select>
       <label htmlFor="new-trip-title">Name this room</label>
       <input id="new-trip-title" value={newTitle} onChange={event => setNewTitle(event.target.value)} maxLength={60} placeholder={newScenario === "yosemite" ? "Yosemite with friends" : "San Diego with friends"} required />
-      <p>Each room has separate people, messages, and plan history. Yosemite is the guided negotiation demo.</p>
       <button type="submit" disabled={busy}>{busy ? "Creating…" : "Create room →"}</button>
     </form>}
     {error && <p role="alert" className="sidebar-error">{error}</p>}
@@ -99,6 +102,5 @@ export default function TripSidebar({ token, hall }: { token: string; hall: Hall
         <span className={`trip-phase-dot ${trip.phase.toLowerCase()}`} title={trip.phase} role="img" aria-label={trip.phase} />
       </Link>)}
     </nav>
-    <div className="trip-sidebar-footer"><span className="trip-foot-route" aria-hidden="true" /><strong>One room, one shared plan.</strong><p>Recent rooms are saved in this browser. Invite links open individual conversations.</p></div>
   </aside>;
 }

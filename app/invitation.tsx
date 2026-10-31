@@ -13,11 +13,11 @@ export default function Invitation({ token }: { token: string }) {
   }
   return <main className="invite-page">
     <header className="site-header"><Link className="wordmark" href="/">Parley<span className="wordmark-dot">.</span></Link><span className="header-note">Room invitation</span></header>
-    <section className="invite-card"><p className="eyebrow">YOUR ROOM IS READY</p><h1>Bring everyone<br />to the table.</h1><p>Share this private invitation with your group. Anyone with the link can access this demo room.</p>
+    <section className="invite-card"><p className="eyebrow">ROOM READY</p><h1>Bring everyone<br />in.</h1><p>Share the link with your group.</p>
       <label htmlFor="hall-url">Invitation link</label><div className="copy-row"><input id="hall-url" readOnly value={url} onFocus={e => e.target.select()} /><button onClick={copy}>{copied ? "Copied" : "Copy link"}</button></div>
       {error && <p role="alert" className="error-text">{error}</p>}
       <Link className="primary-button" href={`/h/${token}`}>Enter chat <span aria-hidden>→</span></Link>
     </section>
-    <footer className="welcome-footer"><span>Four representatives · one Yosemite demo</span><span>Bearer link · keep it among your group</span></footer>
+    <footer className="welcome-footer"><span>Parley</span><span>Anyone with the link can enter</span></footer>
   </main>;
 }

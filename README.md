@@ -28,8 +28,8 @@ The Agent Relay Sessions MCP configured in Codex is separate from the applicatio
 
 For a timed presenter click path, see [DEMO.md](DEMO.md).
 
-1. Create a Yosemite room and share its invitation link. Open **Travelers** to show Alice's $420 cap, Parth's private-room rule, Aarsh's required hike and rafting, and Maya's vegetarian preference.
-2. Open **Conversation**. Choose **Start planning** for real Relay delivery or **Try sample replay** for the labeled local version. The group proposes $500, Alice rejects it, Parth changes the stay to reach $430, and Maya changes meals to reach $410. All four agents accept plan v3.
+1. Create a room and share its invitation link. Open **People** to show Alice's $420 cap, Parth's private-room rule, Aarsh's required hike and rafting, and Maya's vegetarian preference.
+2. Open **Agent chat**. Choose **Start planning** for real Relay delivery or **Try sample replay** for the labeled local version. The group proposes $500, Alice rejects it, Parth changes the stay to reach $430, and Maya changes meals to reach $410. All four agents accept plan v3.
 3. Open **Plan** to show the three versions, itinerary, votes, hard limits, and concessions. Use **Draft Alice's $400 message**, then send it in the conversation.
 4. The room reopens and creates plan v4 at $390 while keeping private rooms, hiking, rafting, and vegetarian meals. Confirm the new private stay when prompted. The remaining representatives vote; the room returns to **Agreed** with 4/4 acceptance.
 5. Create a separate San Diego room from **+ New** to demonstrate different travelers and isolated conversations.

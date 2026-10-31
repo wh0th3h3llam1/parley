@@ -2,7 +2,7 @@
 
 ## Screen job
 
-Show a group decision changing in real time, while keeping people, messages, versions, and votes in one room. The selected conversation is the center of a three-region workspace. Recent rooms sit on the left; negotiation status and representatives sit on the right. Travelers and Plan are secondary tabs. The default room is Yosemite, and a separate San Diego room demonstrates isolation.
+Show a group decision changing in real time, while keeping people, messages, versions, and votes in one room. Agent chat, Group chat, Media, People, Plan, and recent rooms sit in the left rail. The selected view is centered; negotiation status and representatives sit on the right. The default sample room is Yosemite, and a separate San Diego room demonstrates isolation.
 
 ## Visual direction
 
