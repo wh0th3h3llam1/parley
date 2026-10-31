@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.data/
+.taste-skill/
+.npm-cache/
+artifacts/
+.env*
+!.env.example
+*.tsbuildinfo
